@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!--
+        列表过滤
+        列表排序
+    -->
+    <div id="app">
+        <input type="text" v-model="searchName">
+        <ul>
+            <li v-for="(p, index) in filterPersons" :key="p.id">
+                {{p.id}}----{{p.name}}----{{p.age}}
+            </li>
+        </ul>
+        <button @click="sortType=1">年龄升序</button>
+        <button @click="sortType=2">年龄降序</button>
+        <button @click="sortType=3">原本顺序</button>
+
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                searchName: '',   //输入框的内容
+                sortType: 1,    //标识排序方式，1升序，2降序，3原本顺序
+                persons: [ //presons：人员
+                    { id: 1, name: 'Tom', age: 15 },
+                    { id: 3, name: 'Jerry', age: 12 },
+                    { id: 5, name: 'Jack', age: 14 },
+                    { id: 7, name: 'Bob', age: 13 },
+                    { id: 2, name: 'Mack', age: 16 },
+                ]
+            },
+            computed: {  //计算属性
+                // 过滤后的新数组
+                /*
+                根据搜索内容、persons、搜索类型返回新数组
+                首次调用会因为搜索内容为空（标***处）直接返回这整个persons
+                */
+                filterPersons() {
+                    //取出依赖数据
+                    const { searchName, persons, sortType } = this;  //结构赋值
+                    // 计算一个新的数据 
+                    // filter数组的过滤方法  indexOf 字符串的查找字符串方法未找到返回-1, *** ''空白字符串的返回值为0
+                    const arr = persons.filter((p, index) => p.name.indexOf(searchName) !== -1)
+                    //有可能要排序
+                    // 有可能要排序(升/降)
+                    if (sortType !== 3) {
+                        /*  sort() 根据p1和p2确定升序或降序
+                        sort((a,b)={retuen a - b})
+                        */
+                        arr.sort((p1, p2) => { // 如果返回值大于0, 将p2放在左边
+                            if (sortType === 2) { // 降序
+                                return p2.age - p1.age
+                            } else { // 升序
+                                return p1.age - p2.age
+                            }
+                        })
+                    }
+                    //返回新数据
+                    return arr
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

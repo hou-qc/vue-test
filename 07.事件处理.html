@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07事件处理</title>
+</head>
+
+<body>
+    <!--
+    1. 绑定监听:
+     v-on:xxx="fun"
+     @xxx="fun"
+     @xxx="fun(参数)"
+     默认事件形参: event
+     隐含属性对象: $event
+    2. 事件修饰符:
+    .prevent : 阻止事件的默认行为 event.preventDefault()
+    .stop : 停止事件冒泡 event.stopPropagation()
+      3. 按键修饰符
+    .keycode : 操作的是某个keycode值的健
+    .enter : 操作的是enter键
+-->
+    <div id="app">
+        <h2>1.绑定监听</h2>
+        <button v-on:click="btn1">btn1</button>
+        <button @click="btn2('hello')">btn2</button>
+        <button @click="btn3('hello',$event)">btn3</button>
+        <!--               ($event) =>{test3('hello',$event)} -->
+        <h2>2.1事件修饰符</h2>
+        <!-- 
+            事件处理的两个重要操作
+            1、阻止事件的默认行为
+            2、阻止事件冒泡
+         -->
+        <a href="https://www.baidu.com/" @click.prevent="btn4">btn4</a>
+        <div style="width: 200px; height: 200px; background-color: aqua;" @click="btn5">
+            <div style="width: 100px; height: 100px; background-color: pink;" @click.stop="btn6"></div>
+        </div>
+        <!-- once只触发一次回调 -->
+        <button @click.once="btn7">btn7</button>
+        <h2>3.按键修饰符</h2>
+        <input type="text" v-model="massage" @keyup.13="ipt8">
+        <input type="text" v-model="massage2" @keyup.enter="ipt9">
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                massage: '',
+                massage2: ''
+            },
+            methods: {
+                btn1(event) {
+                    alert(event.target.innerHTML)
+                },
+                btn2(value) {
+                    alert(value)
+                },
+                btn3(value, event) {
+                    alert(event.target.innerHTML + '：' + value)
+                },
+                btn4(event) {
+                    // event.preventDefault();  js阻止时间冒泡
+                    alert(event.target.innerHTML)
+                },
+                btn5() {
+                    alert('btn5');
+                },
+                btn6() {
+                    alert('btn6')
+                },
+                btn7() {
+                    alert('btn7')
+                },
+                ipt8(event) {
+                    // if (event.keyCode == 13) {
+                    alert(this.massage)
+                    // }
+                },
+                ipt9() {
+                    alert(this.massage2)
+                }
+            },
+        })
+
+
+
+    </script>
+</body>
+
+</html>
