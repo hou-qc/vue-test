@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue实例_生命周期</title>
+</head>
+
+<body>
+    <!--
+    1. vue对象的生命周期
+        1). 初始化显示
+            * beforeCreate()
+            * created()
+            * beforeMount()
+            * mounted()
+        2). 更新状态
+            * beforeUpdate()
+            * updated()
+        3). 销毁vue实例: vm.$destory()
+            * beforeDestory()
+            * destoryed()
+    2. 常用的生命周期方法
+        created()/mounted(): 发送ajax请求, 启动定时器等异步任务
+        beforeDestory(): 做收尾工作, 如: 清除定时器
+-->
+    <div id="app">
+        <button @click="destroy">destroy vue</button>
+        <p v-show="isShow">xxx</p>
+        <p ref="content">{{isShow? '真' : '假'}}</p>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        let num = 0;
+        let num2 = 0;
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    isShow: true,
+                }
+            },
+            created() {  //在实例创建完成后被立即调用
+                console.log('在实例创建完成后被立即调用created()', this.isShow);
+            },
+            beforeCreate() {// 在实例初始化之后，数据观测 (data observer) 和 event/watcher 事件配置之前被调用，不能通过vm读取data中的数据
+                console.log('在实例初始化之后....调用beforeCreate()', this.isShow);
+                //实现数据代理/data数据的监视（setter）
+            },
+            beforeMount() {  //在挂载开始之前被调用
+                console.log('在挂载开始之前被调用beforeMount()', this.$refs.content);  //不能通过ref读取页面标签对象
+            },
+            // 初始第一次显示/渲染界面
+            // ----------------
+            /*  
+             mounted()  挂载后 
+             界面初始显示之后立即执行
+             一般在此执行异步操作：发送ajax请求/启动定时器/订阅消息/绑定自定义事件监听
+            */
+            mounted() {
+                // setInterval(() => {  //this指向vm
+                //     this.isShow = !this.isShow;
+                // }, 1000)
+                console.log('挂载后mounted()调用', this.$refs.content);  //能通过ref读取页面标签
+                //将intervalId保存到vm上
+                this.intervalId = setInterval(function () {
+                    this.isShow = !this.isShow;
+                }.bind(this), 1000)  //使shi指向vm
+                /* 
+                1. 返回一个新函数
+                2. 新函数内部会调用原函数(通过call调用)
+                3. 在调用时指定原函数执行的this为bind()的第一个参数的值
+                */
+            },
+            beforeUpdate() { //数据更新时调用，因为不会，所以通过refs读取到的界面是数据更新前的
+                console.log('数据更新时调用beforeUpdate()', this.isShow, this.$refs.content.innerHTML);
+            },
+            //界面更新，通过refs读取到的界面是是数据更新后的
+            updated() { //由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩子
+                console.log('DOM 重新渲染和打补丁updated()', this.isShow, this.$refs.content.innerHTML);
+            },
+            destroyed() { //实例销毁后调用
+                console.log('实例销毁后调用destroyed()');
+            },
+
+            /*
+                在vm死亡之前调用
+                在此做一些收尾工作
+            */
+            beforeDestroy() {
+                console.log('vm死亡之前调用beforeDestroy()');
+                clearInterval(this.intervalId); //清除定时器
+            },
+            methods: {
+                destroy() {
+                    this.$destroy();  //消灭vm
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
