@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>过渡&动画_缩放</title>
+    <style>
+        /* 显示的过渡 */
+        .bounce-enter-active {
+            animation: bounce-in .5s;
+        }
+
+        /* 隐藏的过渡 */
+        .bounce-leave-active {
+            /* reverse 动画反转*/
+            animation: bounce-in .5s reverse; 
+        }
+
+        /* 定义动画 */
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="example-2">
+        <button @click="show = !show">Toggle show</button><br>
+        <transition name="bounce"> 
+                                            <!-- 不转换为行内块会导致一整行p晃动 -->
+            <p v-if="show" style="display: inline-block;border: 1px solid red;">Lorem ipsum dolor sit amet</p>
+        </transition>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        new Vue({
+            el: '#example-2',
+            data: {
+                show: true
+            }
+        })
+
+    </script>
+</body>
+
+</html>

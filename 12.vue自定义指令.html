@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义指令</title>
+</head>
+
+<body>
+    <!--
+1. 注册全局指令
+  Vue.directive('my-directive', function(el, binding){
+    el.innerHTML = binding.value.toupperCase()
+  })
+2. 注册局部指令
+  directives : {
+    'my-directive' : {
+        bind (el, binding) {
+          el.innerHTML = binding.value.toupperCase()
+        }
+    }
+  }
+3. 使用指令
+  v-my-directive='xxx'
+-->
+    <div id="test">
+        <p v-upper-text="message"></p>
+        <p v-lower-text="message"></p>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        // Vue.config.silent = true;  //取消日志和警告
+        /*
+        注册全局指令 upper-text
+        el：指令属性所有的标签元素
+        binding：包括指令相关数据的对象
+
+        */
+        Vue.directive('upper-text', function (el, binding) {
+            console.log('upper-text', binding);
+            el.innerText = binding.value.toUpperCase();    //转换为大写
+            // el.textContent = binding.value.toUpperCase()
+        })
+        new Vue({
+            el: '#test',
+            data: {
+                message: 'osikdfhjlksdhjSDJKJDSLKdahfj'
+            },
+            //注册局部指令
+            directives: {
+                'lower-text'(el, binding) {
+                    console.log('lower-text', binding);
+                    el.innerText = binding.value.toLowerCase()
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
